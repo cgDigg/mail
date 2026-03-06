@@ -1,10 +1,16 @@
 # mail
 Thanks for using mail.
 It is a tools for sending email. 
+
 ##Use modules
 ```modules
 hashlib
 tkinter
 socket
 os
+random
+email
+smtplib
+time
+json
 ```
