@@ -1,4 +1,3 @@
-from coverage import data
 from .web import *
 import tkinter as tk
 from tkinter import scrolledtext
@@ -53,7 +52,7 @@ def create(name,password,email,auth_code,server_email):
     subject="IDE Login Auth Code"
     message = f"Your auth code is {check_number}"
     msg = MIMEText(message, 'plain', 'utf-8')
-    msg['From'] = Header("系统管理员", 'utf-8')
+    msg['From'] = Header("Administor", 'utf-8')
     msg['To'] = Header(email, 'utf-8')
     msg['Subject'] = Header(subject, 'utf-8')
     server = smtplib.SMTP_SSL(email,465)
@@ -67,12 +66,12 @@ def create(name,password,email,auth_code,server_email):
         if os.path.exists("user.json"):
             with open("user.json") as f:
                 data = json.load(f)
-                data[name]=hash(password))
+                data[name]=hash(password)
                 f.write(json.dumps(data))
         else:
             with open("user.json","w") as f:
                 data={}
-                data[name]=hash(password))
+                data[name]=hash(password)
                 f.write(json.dumps(data))
         return "success"
 def login():
@@ -92,3 +91,19 @@ def login():
                 return "error:2"
     else:
         return "error:1"
+def logout():
+    os.remove("login.txt")
+def listen():
+    s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.bind(("0.0.0.0",20263))
+    s.listen()
+    print("Listening,enter Ctrl+C to stop.")
+    try:
+        num=0
+        while True:
+            mail_data=s.accept()
+            num+=1
+            from_ip=mail_data[0:16]
+            with open(f"news/{num}.mail",'w') as f:
+                f.write(mail_data)
+            print(f"get a mail from{,mail_data[0:16]}")
